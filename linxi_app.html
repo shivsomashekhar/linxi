@@ -400,10 +400,82 @@
             <div id="checkin-content"></div>
         </div>
 
+        <!-- FAQ Screen -->
+        <div class="screen" id="faq-screen">
+            <div class="header">
+                <div class="logo">FAQ</div>
+            </div>
+            
+            <div id="faq-content">
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">When do I pay?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        You commit to a period of time for the challenge. Every day you miss your goals, the penalty will be charged to your account. Missed days will not be charged.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">What if I forget to check in?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        No problem - days where you don't check in won't be charged. We rely on your honesty to report when you miss your goals. The app works best when you're truthful with yourself about your progress.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">What do you do with the money?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        Some of it pays for the infrastructure and maintenance of the app. The rest of it goes to causes which are generally deemed "worthy" such as wildlife preservation, etc.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">Can I change or cancel my goal once it starts?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        Once you commit, the goal cannot be canceled or the penalty changed - that's the point! However, you can edit the goal description or title at any time. This keeps you accountable to your original commitment.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">What time is the daily check-in deadline?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        You can check in anytime before midnight in your local timezone. We recommend making it part of your evening routine.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">Can I pause my goal for vacation or emergencies?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        Goals cannot be paused - commitment means showing up even when it's hard. If you need a break, choose shorter challenge periods (1-2 weeks) that you know you can complete.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">Why penalties instead of rewards?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        Research shows loss aversion is more powerful than gain motivation. The fear of losing money you've committed is a stronger motivator than earning small rewards.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">Is Linxi right for me?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        Linxi works best for people who've tried other methods and need serious accountability. If losing $5-20 per miss won't bother you, this isn't for you. If the thought makes you uncomfortable - that's the point, and Linxi might help!
+                    </p>
+                </div>
+                
+                <div class="goal-card" style="background: #f7fafc;">
+                    <p style="color: #718096; font-size: 14px; text-align: center;">
+                        Have more questions? Contact us at <a href="mailto:support@linxi.app" style="color: #ea6100; text-decoration: none;">support@linxi.app</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <!-- Navigation -->
         <div class="navigation" id="navigation" style="display: none;">
             <div class="nav-item" onclick="showScreen('dashboard-screen')">Goals</div>
             <div class="nav-item" onclick="showScreen('checkin-screen')">Check-in</div>
+            <div class="nav-item" onclick="showScreen('faq-screen')">FAQ</div>
         </div>
     </div>
 
@@ -446,7 +518,7 @@
             document.getElementById(screenId).classList.add('active');
             
             const navigation = document.getElementById('navigation');
-            if (['dashboard-screen', 'checkin-screen'].includes(screenId)) {
+            if (['dashboard-screen', 'checkin-screen', 'faq-screen'].includes(screenId)) {
                 navigation.style.display = 'flex';
             } else {
                 navigation.style.display = 'none';
@@ -462,6 +534,8 @@
             } else if (screenId === 'checkin-screen') {
                 document.querySelectorAll('.nav-item')[1].classList.add('active');
                 updateCheckinScreen();
+            } else if (screenId === 'faq-screen') {
+                document.querySelectorAll('.nav-item')[2].classList.add('active');
             }
         }
 
