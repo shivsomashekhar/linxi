@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linxi - Focused Commitment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #ea6100 0%, #ff8c42 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ea6100;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ea6100;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #ea6100;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #d1560a;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .btn-success {
+            background: #38a169;
+        }
+
+        .btn-success:hover {
+            background: #2f855a;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .goal-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .goal-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .goal-meta {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .goal-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-missed {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .checkin-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .checkin-question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2d3748;
+        }
+
+        .checkin-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .checkin-buttons button {
+            flex: 1;
+        }
+
+        .penalty-warning {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            color: #742a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #68d391;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            color: #718096;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #ea6100;
+        }
+
+        .nav-item:hover {
+            color: #ea6100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome-screen">
+            <div class="header">
+                <div class="logo">Linxi</div>
+                <div class="subtitle">Get focused and disciplined</div>
+            </div>
+            
+            <div style="margin-top: 60px;">
+                <h2 style="margin-bottom: 20px; text-align: center; color: #2d3748;">Your Personal Accountability Partner</h2>
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 2px solid #ea6100;">
+                    <div style="font-weight: 700; margin-bottom: 12px; color: #ea6100; font-size: 18px;">🎯 Linxi holds you accountable</div>
+                    <div style="color: #4a5568; line-height: 1.5;">Just like a workout partner pushes you at the gym, Linxi uses financial stakes to keep you committed to your goals.</div>
+                </div>
+                
+                <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                    <div style="font-weight: 700; margin-bottom: 12px; color: #856404; font-size: 16px;">⚠️ Smart Strategy Tips:</div>
+                    <div style="color: #856404; line-height: 1.5; font-size: 14px;">
+                        • <strong>Be realistic:</strong> If it doesn't work in a month, this is not for you<br>
+                        • <strong>Find your sweet spot:</strong> Too little won't motivate, too much wastes money
+                    </div>
+                </div>
+                
+                <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">1. Set Your Focus</div>
+                    <div style="color: #666; font-size: 14px;">Choose one clear goal and a short commitment period</div>
+                </div>
+                <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">2. Stake Your Money</div>
+                    <div style="color: #666; font-size: 14px;">Set a penalty that stings but won't break you</div>
+                </div>
+                <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">3. Stay Sharp</div>
+                    <div style="color: #666; font-size: 14px;">Check in daily - your money depends on it</div>
+                </div>
+                
+                <button class="btn" onclick="showScreen('signup-screen')">Start My First Challenge</button>
+            </div>
+        </div>
+
+        <!-- Signup Screen -->
+        <div class="screen" id="signup-screen">
+            <div class="header">
+                <div class="logo">Create Your Goal</div>
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>What's your goal?</label>
+                    <input type="text" id="goal-title" placeholder="e.g., Exercise for 30 minutes" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Goal description (optional)</label>
+                    <textarea id="goal-description" placeholder="Any specific details about your goal..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>How long is your commitment?</label>
+                    <input type="number" id="duration" placeholder="e.g., 30" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Time period</label>
+                    <select id="period" required>
+                        <option value="days">Days</option>
+                        <option value="weeks">weeks</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Penalty amount (per miss)</label>
+                    <input type="number" id="penalty" placeholder="e.g., 10" min="1" step="0.01" required>
+                </div>
+                
+                <button type="submit" class="btn">Start My Commitment</button>
+            </form>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div class="screen" id="dashboard-screen">
+            <div class="header">
+                <div class="logo">My Goals</div>
+            </div>
+            
+            <div id="dashboard-content">
+                <!-- Goals will be populated here -->
+            </div>
+        </div>
+
+        <!-- Check-in Screen -->
+        <div class="screen" id="checkin-screen">
+            <div class="header">
+                <div class="logo">Daily Check-in</div>
+            </div>
+            
+            <div id="checkin-content">
+                <!-- Check-in content will be populated here -->
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation" id="navigation" style="display: none;">
+            <div class="nav-item" onclick="showScreen('dashboard-screen')">Goals</div>
+            <div class="nav-item" onclick="showScreen('checkin-screen')">Check-in</div>
+        </div>
+    </div>
+
+    <script>
+        // App data storage
+        let appData = {
+            goals: [],
+            checkins: {}
+        };
+
+        // Initialize app
+        function initApp() {
+            const savedData = localStorage.getItem('linxiAppData');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                updateDashboard();
+            }
+        }
+
+        // Save data
+        function saveData() {
+            localStorage.setItem('linxiAppData', JSON.stringify(appData));
+        }
+
+        // Show screen
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            // Show navigation for main screens
+            const navigation = document.getElementById('navigation');
+            if (['dashboard-screen', 'checkin-screen'].includes(screenId)) {
+                navigation.style.display = 'flex';
+            } else {
+                navigation.style.display = 'none';
+            }
+            
+            // Update navigation active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (screenId === 'dashboard-screen') {
+                document.querySelector('.nav-item').classList.add('active');
+            } else if (screenId === 'checkin-screen') {
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+                updateCheckinScreen();
+            }
+        }
+
+        // Handle signup form
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const goal = {
+                id: Date.now(),
+                title: document.getElementById('goal-title').value,
+                description: document.getElementById('goal-description').value,
+                duration: parseInt(document.getElementById('duration').value),
+                period: document.getElementById('period').value,
+                penalty: parseFloat(document.getElementById('penalty').value),
+                startDate: new Date().toISOString().split('T')[0],
+                totalPenalties: 0,
+                completedDays: 0,
+                missedDays: 0
+            };
+            
+            appData.goals.push(goal);
+            appData.checkins[goal.id] = {};
+            
+            saveData();
+            updateDashboard();
+            showScreen('dashboard-screen');
+        });
+
+        // Update dashboard
+        function updateDashboard() {
+            const content = document.getElementById('dashboard-content');
+            
+            if (appData.goals.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; margin-top: 60px; color: #666;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🎯</div>
+                        <div style="font-size: 18px; margin-bottom: 10px;">No goals yet</div>
+                        <div style="margin-bottom: 30px;">Create your first commitment!</div>
+                        <button class="btn" onclick="showScreen('signup-screen')">Add Goal</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            appData.goals.forEach(goal => {
+                const daysPassed = Math.floor((new Date() - new Date(goal.startDate)) / (1000 * 60 * 60 * 24)) + 1;
+                const totalDays = goal.duration;
+                const progress = Math.min(daysPassed / totalDays * 100, 100);
+                const isCompleted = daysPassed > totalDays;
+                
+                html += `
+                    <div class="goal-card">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-meta">
+                            ${goal.duration} ${goal.period} • $${goal.penalty} penalty per miss
+                            <br>Started: ${new Date(goal.startDate).toLocaleDateString()}
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">${goal.completedDays}</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">$${goal.totalPenalties.toFixed(2)}</div>
+                                <div class="stat-label">Penalties</div>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-status">
+                            <div style="flex: 1;">
+                                <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: #ea6100; height: 100%; width: ${progress}%; transition: width 0.3s;"></div>
+                                </div>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    Day ${Math.min(daysPassed, totalDays)} of ${totalDays}
+                                </div>
+                            </div>
+                            <span class="status-badge ${isCompleted ? 'status-missed' : 'status-active'}">
+                                ${isCompleted ? 'Completed' : 'Active'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `<button class="btn" onclick="showScreen('signup-screen')" style="margin-top: 20px; margin-bottom: 80px;">Add Another Goal</button>`;
+            
+            content.innerHTML = html;
+        }
+
+        // Update check-in screen
+        function updateCheckinScreen() {
+            const content = document.getElementById('checkin-content');
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (appData.goals.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; margin-top: 60px; color: #666;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                        <div style="font-size: 18px; margin-bottom: 10px;">No active goals</div>
+                        <div style="margin-bottom: 30px;">Create a goal to start checking in!</div>
+                        <button class="btn" onclick="showScreen('signup-screen')">Add Goal</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            appData.goals.forEach(goal => {
+                const daysPassed = Math.floor((new Date() - new Date(goal.startDate)) / (1000 * 60 * 60 * 24)) + 1;
+                const isCompleted = daysPassed > goal.duration;
+                const todayCheckin = appData.checkins[goal.id][today];
+                
+                if (isCompleted) return; // Skip completed goals
+                
+                html += `
+                    <div class="goal-card">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-meta">Day ${daysPassed} of ${goal.duration}</div>
+                        
+                        ${todayCheckin ? 
+                            `<div class="${todayCheckin === 'success' ? 'success-message' : 'penalty-warning'}">
+                                ${todayCheckin === 'success' ? 
+                                    '✅ Great job! You completed your goal today.' : 
+                                    `❌ You missed today's goal. Penalty: $${goal.penalty}`
+                                }
+                            </div>` :
+                            `<div class="checkin-section">
+                                <div class="checkin-question">
+                                    Did you complete "${goal.title}" today?
+                                </div>
+                                <div class="checkin-buttons">
+                                    <button class="btn btn-success" onclick="recordCheckin(${goal.id}, 'success')">
+                                        ✅ Yes, I did it!
+                                    </button>
+                                    <button class="btn btn-danger" onclick="recordCheckin(${goal.id}, 'missed')">
+                                        ❌ I missed it
+                                    </button>
+                                </div>
+                            </div>`
+                        }
+                    </div>
+                `;
+            });
+            
+            if (!html) {
+                content.innerHTML = `
+                    <div style="text-align: center; margin-top: 60px; color: #666;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+                        <div style="font-size: 18px; margin-bottom: 10px;">All caught up!</div>
+                        <div>You've completed all your active goals for today.</div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = html;
+            }
+        }
+
+        // Record check-in
+        function recordCheckin(goalId, result) {
+            const today = new Date().toISOString().split('T')[0];
+            const goal = appData.goals.find(g => g.id === goalId);
+            
+            if (!goal) return;
+            
+            appData.checkins[goalId][today] = result;
+            
+            if (result === 'success') {
+                goal.completedDays++;
+            } else {
+                goal.missedDays++;
+                goal.totalPenalties += goal.penalty;
+            }
+            
+            saveData();
+            updateCheckinScreen();
+            updateDashboard();
+        }
+
+        // Initialize app on load
+        window.addEventListener('load', initApp);
+    </script>
+</body>
+</html>
