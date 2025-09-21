@@ -515,6 +515,12 @@
         function updateCheckinScreen() {
             const content = document.getElementById('checkin-content');
             const today = new Date().toISOString().split('T')[0];
+            const todayFormatted = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
             
             if (appData.goals.length === 0) {
                 content.innerHTML = `
@@ -528,7 +534,11 @@
                 return;
             }
             
-            let html = '';
+            let html = `
+                <div style="text-align: center; background: linear-gradient(135deg, #ea6100 0%, #ff8c42 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                    <div style="font-size: 18px; font-weight: 600;">${todayFormatted}</div>
+                </div>
+            `;
             
             appData.goals.forEach(goal => {
                 const daysPassed = Math.floor((new Date() - new Date(goal.startDate)) / (1000 * 60 * 60 * 24)) + 1;
@@ -546,7 +556,7 @@
                             `<div class="${todayCheckin === 'success' ? 'success-message' : 'penalty-warning'}">
                                 ${todayCheckin === 'success' ? 
                                     '✅ Great job! You completed your goal today.' : 
-                                    `❌ You missed today's goal. Penalty: $${goal.penalty}`
+                                    `❌ You missed today's goal. Penalty: ${goal.penalty}`
                                 }
                             </div>` :
                             `<div class="checkin-section">
@@ -567,7 +577,11 @@
                 `;
             });
             
-            if (!html) {
+            if (html === `
+                <div style="text-align: center; background: linear-gradient(135deg, #ea6100 0%, #ff8c42 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                    <div style="font-size: 18px; font-weight: 600;">${todayFormatted}</div>
+                </div>
+            `) {
                 content.innerHTML = `
                     <div style="text-align: center; margin-top: 60px; color: #666;">
                         <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
