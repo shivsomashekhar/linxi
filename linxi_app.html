@@ -31,6 +31,7 @@
             display: none;
             padding: 20px;
             min-height: 100vh;
+            padding-bottom: 80px;
         }
 
         .screen.active {
@@ -111,6 +112,14 @@
 
         .btn-success:hover {
             background: #2f855a;
+        }
+
+        .btn-secondary {
+            background: #718096;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
         }
 
         .stats-grid {
@@ -261,6 +270,29 @@
         .nav-item:hover {
             color: #ea6100;
         }
+
+        .penalty-calculator {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .penalty-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .streak-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ea6100 0%, #ff8c42 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -288,15 +320,15 @@
                 
                 <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
                     <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">1. Set Your Focus</div>
-                    <div style="color: #666; font-size: 14px;">Choose one clear goal and a short commitment period</div>
+                    <div style="color: #666; font-size: 14px;">Choose clear goals with the right penalty amount</div>
                 </div>
                 <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
-                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">2. Stake Your Money</div>
-                    <div style="color: #666; font-size: 14px;">Set a penalty that stings but won't break you</div>
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">2. Stay Accountable</div>
+                    <div style="color: #666; font-size: 14px;">Check in daily - your money and streaks depend on it</div>
                 </div>
                 <div style="background: #f7fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">3. Stay Sharp</div>
-                    <div style="color: #666; font-size: 14px;">Check in daily - your money depends on it</div>
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">3. Track Progress</div>
+                    <div style="color: #666; font-size: 14px;">See patterns, build streaks, and achieve your goals</div>
                 </div>
                 
                 <button class="btn" onclick="showScreen('signup-screen')">Start My First Challenge</button>
@@ -322,23 +354,31 @@
                 
                 <div class="form-group">
                     <label>How long is your commitment?</label>
-                    <input type="number" id="duration" placeholder="e.g., 30" min="1" required>
+                    <input type="number" id="duration" placeholder="e.g., 14" min="1" max="30" required>
                 </div>
                 
                 <div class="form-group">
                     <label>Time period</label>
                     <select id="period" required>
                         <option value="days">Days</option>
-                        <option value="weeks">weeks</option>
+                        <option value="weeks">Weeks</option>
                     </select>
                 </div>
                 
-                <div class="form-group">
+                <div class="penalty-calculator">
                     <label>Penalty amount (per miss)</label>
-                    <input type="number" id="penalty" placeholder="e.g., 10" min="1" step="0.01" required>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Find your sweet spot - not too little, not too much</div>
+                    <input type="range" id="penalty-slider" min="1" max="50" value="10" class="penalty-slider" oninput="updatePenaltyDisplay()">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span style="font-size: 12px; color: #666;">$1</span>
+                        <span id="penalty-display" style="font-size: 18px; font-weight: bold; color: #ea6100;">$10</span>
+                        <span style="font-size: 12px; color: #666;">$50</span>
+                    </div>
+                    <input type="hidden" id="penalty" value="10">
                 </div>
                 
                 <button type="submit" class="btn">Start My Commitment</button>
+                <button type="button" class="btn btn-secondary" onclick="showScreen('welcome-screen')">Cancel</button>
             </form>
         </div>
 
@@ -348,9 +388,7 @@
                 <div class="logo">My Goals</div>
             </div>
             
-            <div id="dashboard-content">
-                <!-- Goals will be populated here -->
-            </div>
+            <div id="dashboard-content"></div>
         </div>
 
         <!-- Check-in Screen -->
@@ -359,9 +397,7 @@
                 <div class="logo">Daily Check-in</div>
             </div>
             
-            <div id="checkin-content">
-                <!-- Check-in content will be populated here -->
-            </div>
+            <div id="checkin-content"></div>
         </div>
 
         <!-- Navigation -->
@@ -392,6 +428,16 @@
             localStorage.setItem('linxiAppData', JSON.stringify(appData));
         }
 
+        // Update penalty display
+        function updatePenaltyDisplay() {
+            const slider = document.getElementById('penalty-slider');
+            const display = document.getElementById('penalty-display');
+            const hiddenInput = document.getElementById('penalty');
+            
+            display.textContent = '$' + slider.value;
+            hiddenInput.value = slider.value;
+        }
+
         // Show screen
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
@@ -399,7 +445,6 @@
             });
             document.getElementById(screenId).classList.add('active');
             
-            // Show navigation for main screens
             const navigation = document.getElementById('navigation');
             if (['dashboard-screen', 'checkin-screen'].includes(screenId)) {
                 navigation.style.display = 'flex';
@@ -407,17 +452,42 @@
                 navigation.style.display = 'none';
             }
             
-            // Update navigation active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
             if (screenId === 'dashboard-screen') {
                 document.querySelector('.nav-item').classList.add('active');
+                updateDashboard();
             } else if (screenId === 'checkin-screen') {
                 document.querySelectorAll('.nav-item')[1].classList.add('active');
                 updateCheckinScreen();
             }
+        }
+
+        // Calculate streak
+        function calculateStreak(goalId) {
+            const goal = appData.goals.find(g => g.id === goalId);
+            if (!goal) return 0;
+            
+            let streak = 0;
+            const today = new Date();
+            
+            for (let i = 0; i < 100; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(checkDate.getDate() - i);
+                const dateStr = checkDate.toISOString().split('T')[0];
+                
+                if (appData.checkins[goalId][dateStr] === 'success') {
+                    streak++;
+                } else if (appData.checkins[goalId][dateStr] === 'missed') {
+                    break;
+                } else if (dateStr < goal.startDate) {
+                    break;
+                }
+            }
+            
+            return streak;
         }
 
         // Handle signup form
@@ -434,11 +504,17 @@
                 startDate: new Date().toISOString().split('T')[0],
                 totalPenalties: 0,
                 completedDays: 0,
-                missedDays: 0
+                missedDays: 0,
+                currentStreak: 0,
+                bestStreak: 0
             };
             
             appData.goals.push(goal);
             appData.checkins[goal.id] = {};
+            
+            document.getElementById('signup-form').reset();
+            document.getElementById('penalty-slider').value = 10;
+            updatePenaltyDisplay();
             
             saveData();
             updateDashboard();
@@ -468,6 +544,12 @@
                 const totalDays = goal.duration;
                 const progress = Math.min(daysPassed / totalDays * 100, 100);
                 const isCompleted = daysPassed > totalDays;
+                const streak = calculateStreak(goal.id);
+                
+                goal.currentStreak = streak;
+                if (streak > goal.bestStreak) {
+                    goal.bestStreak = streak;
+                }
                 
                 html += `
                     <div class="goal-card">
@@ -476,6 +558,8 @@
                             ${goal.duration} ${goal.period} • $${goal.penalty} penalty per miss
                             <br>Started: ${new Date(goal.startDate).toLocaleDateString()}
                         </div>
+                        
+                        ${streak > 0 ? `<div class="streak-badge">🔥 ${streak} day streak!</div>` : ''}
                         
                         <div class="stats-grid">
                             <div class="stat-card">
@@ -508,6 +592,7 @@
             html += `<button class="btn" onclick="showScreen('signup-screen')" style="margin-top: 20px; margin-bottom: 80px;">Add Another Goal</button>`;
             
             content.innerHTML = html;
+            saveData();
         }
 
         // Update check-in screen
@@ -544,7 +629,7 @@
                 const isCompleted = daysPassed > goal.duration;
                 const todayCheckin = appData.checkins[goal.id][today];
                 
-                if (isCompleted) return; // Skip completed goals
+                if (isCompleted) return;
                 
                 html += `
                     <div class="goal-card">
@@ -555,7 +640,7 @@
                             `<div class="${todayCheckin === 'success' ? 'success-message' : 'penalty-warning'}">
                                 ${todayCheckin === 'success' ? 
                                     '✅ Great job! You completed your goal today.' : 
-                                    `❌ You missed today's goal. Penalty: ${goal.penalty}`
+                                    `❌ You missed today's goal. Penalty: $${goal.penalty}`
                                 }
                             </div>` :
                             `<div class="checkin-section">
@@ -576,11 +661,7 @@
                 `;
             });
             
-            if (html === `
-                <div style="text-align: center; background: linear-gradient(135deg, #ea6100 0%, #ff8c42 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
-                    <div style="font-size: 18px; font-weight: 600;">${todayFormatted}</div>
-                </div>
-            `) {
+            if (!html.includes('goal-card')) {
                 content.innerHTML = `
                     <div style="text-align: center; margin-top: 60px; color: #666;">
                         <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
