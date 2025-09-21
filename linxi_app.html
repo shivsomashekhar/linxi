@@ -332,6 +332,7 @@
                 </div>
                 
                 <button class="btn" onclick="showScreen('signup-screen')">Start My First Challenge</button>
+                <button class="btn btn-secondary" onclick="showScreen('faq-screen')" style="margin-top: 5px;">View FAQ</button>
             </div>
         </div>
 
@@ -367,12 +368,12 @@
                 
                 <div class="penalty-calculator">
                     <label>Penalty amount (per miss)</label>
-                    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Find your sweet spot - not too little, not too much</div>
-                    <input type="range" id="penalty-slider" min="1" max="50" value="10" class="penalty-slider" oninput="updatePenaltyDisplay()">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Find your sweet spot - between $1 and $25</div>
+                    <input type="range" id="penalty-slider" min="1" max="25" value="10" class="penalty-slider" oninput="updatePenaltyDisplay()">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                         <span style="font-size: 12px; color: #666;">$1</span>
                         <span id="penalty-display" style="font-size: 18px; font-weight: bold; color: #ea6100;">$10</span>
-                        <span style="font-size: 12px; color: #666;">$50</span>
+                        <span style="font-size: 12px; color: #666;">$25</span>
                     </div>
                     <input type="hidden" id="penalty" value="10">
                 </div>
@@ -425,6 +426,13 @@
                     <h3 style="color: #ea6100; margin-bottom: 15px;">What do you do with the money?</h3>
                     <p style="color: #4a5568; line-height: 1.6;">
                         Some of it pays for the infrastructure and maintenance of the app. The rest of it goes to causes which are generally deemed "worthy" such as wildlife preservation, etc.
+                    </p>
+                </div>
+                
+                <div class="goal-card">
+                    <h3 style="color: #ea6100; margin-bottom: 15px;">What are the minimum and maximum penalties?</h3>
+                    <p style="color: #4a5568; line-height: 1.6;">
+                        You can set penalties between $1 (minimum) and $25 (maximum) per missed goal. Choose an amount that motivates you - not too little to ignore, not too much to stress about.
                     </p>
                 </div>
                 
